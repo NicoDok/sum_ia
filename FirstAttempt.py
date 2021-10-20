@@ -11,8 +11,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
 
-mnist_train_csv = "../data/mnist_train.csv"
-mnist_test_csv = "../data/mnist_test.csv"
+mnist_train_csv = "data/mnist_train.csv"
+mnist_test_csv = "data/mnist_test.csv"
 
 df_train = pd.read_csv(mnist_train_csv, header=None) # data_frame
 
