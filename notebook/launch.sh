@@ -1,1 +1,3 @@
-"jupyter notebook" 
+#!/bin/sh
+
+jupyter notebook
