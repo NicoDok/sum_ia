@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# project custom ignore
+data/mnist_test.csv
+data/mnist_train.csv
