@@ -65,3 +65,8 @@ if((CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME OR MODERN_CMAKE_BUILD_TESTING)
    AND BUILD_TESTING)
   add_subdirectory(tests)
 endif()
+
+#add_subdirectory(extern/pybind11)
+#pybind11_add_module(example src/py_test.cpp)
+
+#target_compile_definitions(example PRIVATE VERSION_INFO=${EXAMPLE_VERSION_INFO})

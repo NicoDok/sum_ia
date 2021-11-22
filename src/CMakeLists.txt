@@ -2,11 +2,10 @@
 # show up in IDEs unless they are listed in add_library.
 
 # Optionally glob, but only for CMake 3.12 or later:
-# file(GLOB HEADER_LIST CONFIGURE_DEPENDS "${ModernCMakeExample_SOURCE_DIR}/include/modern/*.hpp")
-set(HEADER_LIST "${Sum_IA_SOURCE_DIR}/include/mathlib/matrix.h")
+file(GLOB HEADER_LIST CONFIGURE_DEPENDS "${Sum_IA_SOURCE_DIR}/include/mathlib/*.h")
 
 # Make an automatic library - will be static or dynamic based on user setting
-add_library(mathlib matrix.cpp ${HEADER_LIST})
+add_library(mathlib STATIC matrix.cpp vector.cpp ${HEADER_LIST})
 
 # We need this directory, and users of our library will need it too
 target_include_directories(mathlib PUBLIC ../include)

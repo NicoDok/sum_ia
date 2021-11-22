@@ -129,5 +129,7 @@ dmypy.json
 .pyre/
 
 # project custom ignore
-data/mnist_test.csv
-data/mnist_train.csv
+scripts/sum_ia_python/data/mnist_test.csv
+scripts/sum_ia_python/data/mnist_train.csv
+
+extern
