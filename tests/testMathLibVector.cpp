@@ -10,7 +10,13 @@ TEST_CASE("Check constr", "[vector]") {
     REQUIRE_NOTHROW(MathLib::vector<int>(5));
     REQUIRE_NOTHROW(MathLib::vector<float>(5));
     REQUIRE_NOTHROW(MathLib::vector<char>(5));
-    //REQUIRE_NOTHROW(MathLib::vector<char>{3, 2, 1});
+    REQUIRE_NOTHROW(MathLib::vector<int>{3, 2, 1});
+
+    MathLib::vector<int> tab_int = {3, 2, 1};
+    REQUIRE(tab_int.size() == 3);
+    REQUIRE(tab_int[0] == 3);
+    REQUIRE(tab_int[1] == 2);
+    REQUIRE(tab_int[2] == 1);
 }
 
 TEST_CASE("Check assign", "[vector]") {

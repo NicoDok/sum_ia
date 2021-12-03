@@ -1,89 +1,132 @@
 #pragma once
 
 #include <cstdint>
+#include <limits>
 #include <memory>
 #include <stdexcept>
-#include <iostream>
 #include <initializer_list>
 
 #include "functions.h"
 
 namespace MathLib {
 
-template <class T>
+template <class value_type, class size_type = uint64_t> class vector;
+
+template <class value_type, class size_type>
 class vector {
     public:
-        // Constr/Destr
-        vector(uint64_t size);
-        vector(std::initializer_list<T>);
+        // Constr
+        vector();
+        explicit vector(size_type size);
+        vector(size_type n, const value_type& val);
+
+        vector(const vector& x);
+        vector(vector&& x);
+
+        template <class InputIterator>
+        vector(InputIterator first, InputIterator last);
+
+        vector(std::initializer_list<value_type>);
+
+        // Destr
         ~vector() {}
 
         // Methods
-        uint64_t size() { return m_size; }
-        uint64_t capacity() { return m_capacity; }
-        void resize(uint64_t new_size);
-        void reserve(uint64_t new_capacity);
+        size_type size() { return m_size; }
+        size_type max_size() { return std::numeric_limits<size_type>::max()-1; }
+        size_type capacity() { return m_capacity; }
+        void resize(size_type new_size);
+        void reserve(size_type new_capacity);
 
         // Operators
-        T& operator [](uint64_t index);
-        const T& operator [](uint64_t index) const;
+        value_type& operator [](size_type index);
+        const value_type& operator [](size_type index) const;
 
     private:
-        uint64_t m_size;
-        uint64_t m_capacity;
-        std::unique_ptr<T[]> m_data;
+        size_type m_size;
+        size_type m_capacity;
+        std::unique_ptr<value_type[]> m_data;
 };
 
-template <class T>
-vector<T>::vector(uint64_t size) : m_size(size), m_capacity(next_pow2(size)) {
-    m_data = std::unique_ptr<T[]>(new T[m_capacity]);
+template <class value_type, class size_type>
+vector<value_type, size_type>::vector(): m_size(0), m_capacity(0), m_data(std::unique_ptr<value_type[]>()) {
 }
 
-template<class T>
-vector<T>::vector(std::initializer_list<T> s) {
-    reserve(s.size());  // get the right amount of space
-    std::uninitialized_copy(s.begin(), s.end(), m_data.get());   // initialize elements (in elem[0:s.size()))
-    m_size = s.size();  // set vector size
+template <class value_type, class size_type>
+vector<value_type, size_type>::vector(size_type size): m_size(size), m_capacity(next_pow2(size)) {
+    m_data = std::unique_ptr<value_type[]>(new value_type[m_capacity]);
 }
 
-template <class T>
-void vector<T>::resize(uint64_t new_size) {
+template <class value_type, class size_type>
+vector<value_type, size_type>::vector(size_type n, const value_type& val): m_size(size), m_capacity(next_pow2(size)) {
+    m_data = std::unique_ptr<value_type[]>(new value_type[m_capacity](val));
+
+}
+
+template <class value_type, class size_type>
+vector<value_type, size_type>::vector(const vector& x): m_size(x.m_size), m_capacity(x.m_capacity) {
+    auto new_data = new value_type[m_capacity];
+    std::copy(x.m_data.get(), x.m_data.get() + m_size, new_data);
+    m_data = std::unique_ptr<value_type[]>(new_data);
+}
+
+template <class value_type, class size_type>
+vector<value_type, size_type>::vector(vector&& x): m_size(x.m_size), m_capacity(x.m_capacity) {
+    m_data = std::move(x.m_data);
+}
+
+/*template <class value_type, class size_type, class InputIterator>
+vector<value_type, size_type>::vector(InputIterator first, InputIterator last): m_size(std::distance((first, last))), m_capacity(next_pow2(size)) {
+    reserve(s.size());
+    std::uninitialized_copy(*first, *last, m_data.get());
+    m_size(std::distance((first, last)));
+    // TODO
+}*/
+
+template <class value_type, class size_type>
+vector<value_type, size_type>::vector(std::initializer_list<value_type> s): vector() {
+    reserve(s.size());
+    std::uninitialized_copy(s.begin(), s.end(), m_data.get());
+    m_size = s.size();
+}
+
+template <class value_type, class size_type>
+void vector<value_type, size_type>::resize(size_type new_size) {
     if (new_size > m_capacity) {
         m_capacity = next_pow2(new_size);
-        m_data =  std::unique_ptr<T[]>(new T[m_capacity]);
+        m_data =  std::unique_ptr<value_type[]>(new value_type[m_capacity]);
 
-        auto new_data = new T[m_capacity];
+        auto new_data = new value_type[m_capacity];
         std::copy(m_data.get(), m_data.get() + m_size, new_data);
-        m_data.release();
-        m_data = std::unique_ptr<T[]>(new_data);
+        m_data.reset();
+        m_data = std::unique_ptr<value_type[]>(new_data);
     }
     m_size = new_size;
 }
 
-template <class T>
-void vector<T>::reserve(uint64_t new_capacity) {
+template <class value_type, class size_type>
+void vector<value_type, size_type>::reserve(size_type new_capacity) {
     if (new_capacity > m_capacity) {
         m_capacity = new_capacity;
-        m_data = std::unique_ptr<T[]>(new T[m_capacity]);
+        m_data = std::unique_ptr<value_type[]>(new value_type[m_capacity]);
 
-        auto new_data = new T[m_capacity];
+        auto new_data = new value_type[m_capacity];
         std::copy(m_data.get(), m_data.get() + m_size, new_data);
-        m_data.release();
-        m_data = std::unique_ptr<T[]>(new_data);
+        m_data.reset();
+        m_data = std::unique_ptr<value_type[]>(new_data);
     }
 }
 
-template <class T>
-T& vector<T>::operator [](uint64_t index) 
+template <class value_type, class size_type>
+value_type& vector<value_type, size_type>::operator [](size_type index) 
 { 
     return (index < m_size) ? m_data[index] : throw std::out_of_range("index out of bound"); 
 }
 
-template <class T>
-const T& vector<T>::operator [](uint64_t index) const 
+template <class value_type, class size_type>
+const value_type& vector<value_type, size_type>::operator [](size_type index) const 
 { 
-    return vector<T>::operator[](index);
+    return vector<value_type, size_type>::operator[](index);
 }
-
 
 }

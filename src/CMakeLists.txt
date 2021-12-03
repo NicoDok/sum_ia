@@ -10,8 +10,8 @@ add_library(mathlib STATIC matrix.cpp vector.cpp ${HEADER_LIST})
 # We need this directory, and users of our library will need it too
 target_include_directories(mathlib PUBLIC ../include)
 
-# All users of this library will need at least C++11
-target_compile_features(mathlib PUBLIC cxx_std_11)
+# All users of this library will need at least C++17
+target_compile_features(mathlib PUBLIC cxx_std_17)
 
 # IDEs should put the headers in a nice place
 source_group(
