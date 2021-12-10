@@ -4,9 +4,10 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
+from network import Network
 
 import torch
-import torch.nn as nn
+from torch import nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
@@ -16,7 +17,7 @@ mnist_test_csv = "data/mnist_test.csv"
 
 df_train = pd.read_csv(mnist_train_csv, header=None) # data_frame
 
-labels = df_train.iloc[:, 0] # iloc "indice" ; loc "identifiant string" ; iloc + rapide que loc
+labels = df_train.iloc[:, 0] # iloc "indice" ; loc "identifiant striyesng" ; iloc + rapide que loc
 labels = labels.values.astype(np.uint8) # transforme en array numpy
 
 images = df_train.iloc[:, 1:].values.astype(np.uint8).reshape(-1, 28, 28) # desapplati ...
@@ -52,23 +53,6 @@ val_y = enc.fit_transform((labels[idx1] + labels[idx2]).reshape(-1, 1)).todense(
 
 val_x = np.concatenate([images[idx1, ...], images[idx2, ...]], axis=2) # concatene images sur le 2e axe
 val_x = val_x.reshape(-1, 28*56).shape # re applatir pour le réseau
-
-class Network(nn.Module):
-    def __init__(self):
-        super(Network, self).__init__()
-        self.l1 = nn.Linear(1568, 392)
-        self.relu1 = nn.ReLU() # casse la linearite
-        self.l2 = nn.Linear(392, 98)
-        self.relu2 = nn.ReLU() # casse la linearite
-        self.l3 = nn.Linear(98, 19)
-        
-    def forward(self, x):
-        x = self.l1(x)
-        x = self.relu1(x)
-        x = self.l2(x)
-        x = self.relu2(x)
-        x = self.l3(x)
-        return F.softmax(x, dim=1)
 
 net = Network()
 

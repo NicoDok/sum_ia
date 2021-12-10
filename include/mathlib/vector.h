@@ -75,13 +75,12 @@ vector<value_type, size_type>::vector(vector&& x): m_size(x.m_size), m_capacity(
     m_data = std::move(x.m_data);
 }
 
-/*template <class value_type, class size_type, class InputIterator>
+template <class value_type, class size_type>
+template <class InputIterator>
 vector<value_type, size_type>::vector(InputIterator first, InputIterator last): m_size(std::distance((first, last))), m_capacity(next_pow2(size)) {
-    reserve(s.size());
+    reserve(m_capacity);
     std::uninitialized_copy(*first, *last, m_data.get());
-    m_size(std::distance((first, last)));
-    // TODO
-}*/
+}
 
 template <class value_type, class size_type>
 vector<value_type, size_type>::vector(std::initializer_list<value_type> s): vector() {
