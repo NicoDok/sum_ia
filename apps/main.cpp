@@ -6,6 +6,8 @@
 
 #include "tools.h"
 
+// #define TEST01
+
 
 #ifdef TEST01
 void exercice01_Transposition() {
@@ -34,7 +36,10 @@ void exercice01_Transposition() {
 int main(int, char**) {
     MathLib::vector<uint64_t> vec({3, 2, 1});
     std::cout << "Hello" << std::endl;
-    //exercice01_Transposition();
-    //MathLib::vector<int64_t> tab_int(5);
-    //tab_int[3] = 2;
+#ifdef TEST01
+    exercice01_Transposition();
+#endif
+
+    MathLib::vector<int64_t> tab_int(5);
+    tab_int[3] = 2;
 }
