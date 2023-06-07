@@ -39,7 +39,7 @@ class vector {
         void reserve(size_type new_capacity);
 
         // Operators
-        value_type& operator [](size_type index);
+        value_type& operator [](size_type index) throw(std::out_of_range);
         const value_type& operator [](size_type index) const;
 
     private:
@@ -118,14 +118,20 @@ void vector<value_type, size_type>::reserve(size_type new_capacity) {
 
 template <class value_type, class size_type>
 value_type& vector<value_type, size_type>::operator [](size_type index) 
-{ 
-    return (index < m_size) ? m_data[index] : throw std::out_of_range("index out of bound"); 
+{
+    if (index < m_size)
+        return  m_data[index]; 
+    
+    throw std::out_of_range("index out of bound");
 }
 
 template <class value_type, class size_type>
 const value_type& vector<value_type, size_type>::operator [](size_type index) const 
-{ 
-    return vector<value_type, size_type>::operator[](index);
+{
+    if (index < m_size)
+        return  m_data[index];
+
+    throw std::out_of_range("index out of bound");
 }
 
 }
